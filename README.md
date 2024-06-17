@@ -2,7 +2,7 @@
 1. Clone o repositório:
 
 ```
-git clone https://github.com
+git clone https://github.com/PPGCC-UFPI-PROJECTS/PPGCC.git
 cd nome-do-repositorio
 ```
 2. Instale as dependências:
