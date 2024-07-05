@@ -1,9 +1,10 @@
 export type Producoes={
-    id:string
+    idproducao:string
     titulo:string
     ano:string
     tipo:string
     membros:string
     idPessoa:string
 
+  
 }

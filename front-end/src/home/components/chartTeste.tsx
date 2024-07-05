@@ -86,16 +86,18 @@ export default function chartTeste() {
   
 }
 
-  const [nProducoes,setNProducoes] = useState<any>([])//Armazenar o número de produções
-  const [series, setSeries] = useState<any[]>([]);
+  const [nProducoes,setNProducoes] = useState<any>()//Armazenar o número de produções
+  const [series, setSeries] = useState<any>([]);
 
 
   useEffect(()=>{
     const fetchData = async ()=>{
       try {
-        const producoesData = await  api.loadProducoes();
-        setNProducoes(producoesData.producoes)
-        console.log("Olá "+JSON.stringify(producoesData.producoes))
+        const producoesData = await  api.loadProducoesByYear();
+        
+        console.log("Olá ", producoesData)
+
+        setNProducoes(producoesData.ano)
               
       } catch (error) {
         console.error('Erro ao carregar produções:', error);    
@@ -113,7 +115,7 @@ export default function chartTeste() {
       name: 'Nº Producoes',
       data: nProducoes,  
     }]);
-    console.log("Series "+series)
+    console.log("Series " + series)
 
   },[nProducoes])
 

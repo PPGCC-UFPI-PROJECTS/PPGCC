@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button"
+import { Pessoa } from "@/types/pessoa"
 import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown } from "lucide-react"
 
@@ -9,19 +10,11 @@ import { ArrowUpDown } from "lucide-react"
 //As colunas são onde vc define o núcleo da aprarência da sua tabela. Eles definem os dados que serão exibidos, como serão formatados,
 //ordenados e filtrados
 
-export type Docente = {
-    id: string
-    name: string
-    qualificacao: string
-    resumo:string
-    numeroCurriculo:string
-    producoes:number
-  }
  
-export const columns: ColumnDef<Docente>[] = [
+export const columns: ColumnDef<Pessoa>[] = [
   {
-    accessorKey: "name",
-    header: "Name",
+    accessorKey: "nomecompleto",
+    header: "Nome",
   },
   {
     accessorKey: "qualificacao",
@@ -30,11 +23,7 @@ export const columns: ColumnDef<Docente>[] = [
   {
     accessorKey: "resumo",
     header: "Resumo",
-  //   cell:({row})=>{
-      
-  //     return <div className="font-medium ">{row}</div>
 
-  // }
   },
 
   {
@@ -45,8 +34,8 @@ export const columns: ColumnDef<Docente>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          <div className="text-left">Nº de produções</div>
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <div className="text-left text-[0.8rem]">Nº de produções</div>
+          <ArrowUpDown className="ml-1 h-3 w-3" />
         </Button>
       )
     },

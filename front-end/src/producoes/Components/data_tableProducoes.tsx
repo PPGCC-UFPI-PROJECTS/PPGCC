@@ -27,7 +27,7 @@ import {
     data: TData[]
   }
    
-  export function DataTable<TData, TValue>({
+  export function DataTableProducoes<TData, TValue>({
     columns,
     data,
   }: DataTableProps<TData, TValue>) {
@@ -56,7 +56,7 @@ import {
    
     return (
       <div>
-        <div className="flex items-center py-4">
+        {/* <div className="flex items-center py-4">
         <Input
           placeholder="Filtrar nomes..."
           value={(table.getColumn("nomecompleto")?.getFilterValue() as string) ?? ""}
@@ -65,7 +65,7 @@ import {
           }
           className="max-w-sm"
         />
-      </div>
+      </div> */}
 
         <div className="rounded-md border">
           <Table>
