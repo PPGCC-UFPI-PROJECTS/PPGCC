@@ -7,9 +7,9 @@ import { useApi } from "@/hooks/useApi";
 
 export default function chartTeste() {
   const api = useApi()
-  // const url = "http://localhost:3000/producoes"
 
-  //Primeiramente criar um gráfico em branco
+  const [series, setSeries] = useState<any[]>([]);
+  const [years, setYears] = useState<any[]>([]);//Armazenar os anos
 
   const options: ApexOptions = {
     chart: {
@@ -30,7 +30,7 @@ export default function chartTeste() {
           reset: true//Voltar o gráfico ao estado inicial
         }
       },
-      background: '#161717' // Cor de fundo escura
+    background: '#161717' // Cor de fundo escura
     },
     theme:{
       mode:'dark',
@@ -54,9 +54,7 @@ export default function chartTeste() {
       }
     },
     xaxis: {
-      categories: [
-        "2012","2013","2014","2015","2016","2017","2018","2019","2020","2021","2022"
-      ],
+      categories: years,
       labels: {
         show: true,
         style: {
@@ -86,18 +84,22 @@ export default function chartTeste() {
   
 }
 
-  const [nProducoes,setNProducoes] = useState<any>()//Armazenar o número de produções
-  const [series, setSeries] = useState<any>([]);
+
 
 
   useEffect(()=>{
     const fetchData = async ()=>{
       try {
         const producoesData = await  api.loadProducoesByYear();
-        
-        console.log("Olá ", producoesData)
+        const yearsData = producoesData.map( (data :any)=> data.ano.toString())
+        const productionsData = producoesData.map( (data :any)=> data.count)
 
-        setNProducoes(producoesData.ano)
+        setYears(yearsData)
+
+        setSeries([{
+          name: 'Nº de produções' ,
+          data: productionsData
+        }]);
               
       } catch (error) {
         console.error('Erro ao carregar produções:', error);    
@@ -107,22 +109,8 @@ export default function chartTeste() {
 
   },[])
 
-  useEffect(()=>{
-    //Atualiza a série de dados quando nProducoes muda
-
-    // Atualiza a série de dados
-    setSeries([{
-      name: 'Nº Producoes',
-      data: nProducoes,  
-    }]);
-    console.log("Series " + series)
-
-  },[nProducoes])
-
-
-
 
   return (
-    <Chart options={options} series={series} type="bar" height={384} width={450}/>
+    <Chart options={options} series={series} type="bar" height={384} width={750}/>
   )
 }

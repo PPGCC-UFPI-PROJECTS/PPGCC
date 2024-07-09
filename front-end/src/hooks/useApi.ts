@@ -35,19 +35,19 @@ export const useApi= () =>({
       return response.data;
     },
 
-    loadProducoes: async () =>{
-      const response = await api.get('/api/producoes/')
+    loadProducoes: async (currentPage:number, pageSize :number) =>{
+      const response = await api.get(`/api/producoes?page=${currentPage}&size=${pageSize}`)
       return response.data;
     },
-    loadProducoesByIdAutor: async (idPessoa:string) =>{//
-      const response = await api.get(`/api/producoes/:${idPessoa}`)
+    loadProducoesByIdAutor: async (idPessoa:number) =>{//
+      const response = await api.get(`/api/producoes/${idPessoa}`)
       return response.data;
     },
     loadProducoesByYear: async () =>{//
       const response = await api.get(`/api/producoes/quantidade`)
       return response.data;
     },
-    loadProducoesFileById: async (idPessoa:string)=>{
+    loadProducoesFileById: async (idPessoa:number)=>{
       const response = await api.get(`/api/producoes/${idPessoa}/arquivo`)
       return response.data;
 

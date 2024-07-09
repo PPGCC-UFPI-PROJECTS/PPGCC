@@ -4,7 +4,7 @@ export type Producoes={
     ano:string
     tipo:string
     membros:string
-    idPessoa:string
+    idPessoa:number
 
   
 }

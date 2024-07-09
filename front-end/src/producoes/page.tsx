@@ -13,6 +13,8 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Pessoa } from '@/types/pessoa';
+import {Base64} from 'js-base64'
+
 
 
 export default function Producoes() {
@@ -23,23 +25,35 @@ export default function Producoes() {
   const [producoes,setProducoes] = useState<any>([])//Armazena os dados para download
   const [loading, setLoading] = useState(true);
   const [pessoa, setPessoa] = useState<Pessoa[]>([]);
-  const [idpessoa, setIdPessoa] = useState<string>(' ');
-  const [arquivo, setArquivo] = useState<any>([]);
+  const [idpessoa, setIdPessoa] = useState<number>(0);
 
-  const handleSelectChangePessoa =  (id:string) => {
+  const handleSelectChangePessoa =  (id:number) => {
     setIdPessoa(id);
   }
 
 
   useEffect(()=>{
-    const fetchData =async ()=>{
+    const fetchAllData =async ()=>{
+      let allProducoes: any[] = [];
+      let currentPage = 1;
+      const pageSize =30;
+      let hasMoreData = true;
+
       try {
-        const producoesData = await  api.loadProducoes();
-        const pessoaData = await  api.loadAutores();
-        setProducoes(producoesData);
-        setPessoa(pessoaData);
-        console.log(producoesData)
+        while (hasMoreData) {
+          const producoesData = await  api.loadProducoes(currentPage,pageSize);
+          allProducoes = [...allProducoes, ...producoesData];
+
+          if (producoesData.length < pageSize) {
+            hasMoreData = false;
+          }
+          currentPage++;
+        } 
         
+        const pessoaData = await  api.loadAutores();
+        
+        setProducoes(allProducoes);
+        setPessoa(pessoaData);
         
       } catch (error) {
         console.error('Erro ao carregar produções:', error);
@@ -49,24 +63,45 @@ export default function Producoes() {
         setLoading(false);
       }
     }
-    fetchData();
+    fetchAllData();
 
   },[])
+
+
+
   const handleDownloadCSV = async ()=>{
-    if(idpessoa){
+    
+    if(idpessoa){    
       try {
         const arquivoData = await  api.loadProducoesFileById(idpessoa); 
-        setArquivo(arquivoData);  
         //Transformar o arquivo em csv 
+        convertBase64toCSV(arquivoData)
+
       } catch (error) {
         console.error('Erro ao carregar produções:', error); 
       }
     }
-    
-   
-
   }
 
+  const convertBase64toCSV = (base64:string)=> {
+    try{
+    let binary_string = Base64.decode(base64) //Decodifica a string base64
+    console.log(binary_string)
+    const blob = new Blob([binary_string], { type: 'text/csv;charset=utf-8' }) //Criar um blob (arquivo grande com dados sem uma estrutura)
+    const url = URL.createObjectURL(blob) //Cria um URL para o Blob
+    const link = document.createElement('a'); // Cria um link
+    link.href = url
+    link.download = "producoes.csv"//Define o nome do arquivo 
+    document.body.appendChild(link);
+    link.click()
+    document.body.removeChild(link); // Remove o link do DOM
+    URL.revokeObjectURL(url); // Revoga a URL
+
+
+    }catch(error) {
+      console.error('Erro ao decodificar a string base64:', error);
+    }
+  }
 
   return (
     <div className='mx-auto flex flex-col gap-5 p-5 lg:container lg:py-5'>
@@ -77,7 +112,7 @@ export default function Producoes() {
       </Badge>
       <div className=' flex flex-col items-start mt-1 gap-3'>
 
-        <Select  onValueChange={handleSelectChangePessoa}>
+        <Select  onValueChange={(value:string)=>handleSelectChangePessoa(parseInt(value))}>
           <SelectTrigger className="w-[250px]">
             <SelectValue placeholder="Selecione o nome da pessoa" />
           </SelectTrigger>
