@@ -5,7 +5,7 @@ import { useApi } from "@/hooks/useApi";
 // import axios from "axios";
 
 
-export default function chartTeste() {
+export default function chartYear() {
   const api = useApi()
 
   const [series, setSeries] = useState<any[]>([]);
@@ -43,7 +43,7 @@ export default function chartTeste() {
         dataLabels: {
           total: {//Mostrar o total no topo
             enabled: true,
-            offsetX: -20,   // Ajuste horizontal
+            offsetX: -10,   // Ajuste horizontal
             style: {
               color: '#FFFFFF',
               fontSize: "12px",

@@ -22,7 +22,11 @@ export const columns: ColumnDef<Pessoa>[] = [
   },
   {
     accessorKey: "resumo",
-    header: "Resumo",
+    header: () => <div className="text-center">Resumo</div>,
+    cell:({row})=>{
+      const resumo = row.getValue("resumo") as string
+      return <div className="text-justify">{resumo}</div>
+  }
 
   },
 

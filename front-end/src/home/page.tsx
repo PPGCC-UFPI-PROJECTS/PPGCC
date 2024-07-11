@@ -1,5 +1,5 @@
 import ChartDocente from "./components/chartDocente"
-import ChartTeste from "./components/chartTeste"
+import ChartYear from "./components/chartYear"
 
 
 
@@ -16,7 +16,7 @@ export default function Home() {
                 <ChartDocente/>
             </div> 
             <div className="flex justify-center"> 
-                <ChartTeste/>
+                <ChartYear/>
             </div>            
         </div>         
     </div>
