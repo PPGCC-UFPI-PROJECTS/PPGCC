@@ -1,4 +1,4 @@
-import { FileText, MenuIcon,Home } from "lucide-react";
+import { FileText, MenuIcon,Home,Download  } from "lucide-react";
 import { Card } from "./card";
 import { Button } from "./button";
 import { Users } from 'lucide-react';
@@ -44,7 +44,7 @@ export default function Header() {
                    
                    <div className="mt-2 flex flex-col gap-2">
                    <SheetClose asChild> 
-                        <Link to={'/'}>
+                        <Link to={'/home'}>
                         <Button variant="outline" className=" w-full justify-start gap-2 ">
                             <Home  size={16}/>
                             Home
@@ -68,13 +68,21 @@ export default function Header() {
                             </Button>
                         </Link>
                     </SheetClose>
+                    <SheetClose asChild> 
+                        <Link to={'/download'}>
+                            <Button variant="outline" className="w-full justify-start gap-2">
+                                < Download   size={16}/>
+                                Dowload
+                            </Button>
+                        </Link>
+                    </SheetClose>
                     </div>
                 </SheetContent>
                
             </Sheet>
        
         </div>
-        <Link to={'/'}>
+        <Link to={'/home'}>       
             <h1 className="text-lg font-semibold text-center ">
                 <span className="text-primary">PPGCC</span>
             </h1>

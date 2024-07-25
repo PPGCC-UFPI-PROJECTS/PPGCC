@@ -7,15 +7,11 @@ export default function App() {
   return (
    
     <BrowserRouter>
-        <Header/>
+       <Header />
         <div className="flex-1">
             <Router/>
         </div>
-        
-    
-    </BrowserRouter>
-    
-    
+    </BrowserRouter> 
     
   )
 }

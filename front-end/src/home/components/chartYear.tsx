@@ -14,7 +14,7 @@ export default function chartYear() {
   const options: ApexOptions = {
     chart: {
       type: 'bar', 
-      height: 350,
+    // height: 350,
       stacked:true,//empilhar os dados
       
       
@@ -40,13 +40,14 @@ export default function chartYear() {
     plotOptions:{//Opções
       bar:{
         horizontal:false,
+        borderRadius: 2,
         dataLabels: {
           total: {//Mostrar o total no topo
             enabled: true,
-            offsetX: -10,   // Ajuste horizontal
+            offsetX: -8,   // Ajuste horizontal
             style: {
               color: '#FFFFFF',
-              fontSize: "12px",
+              fontSize: "10px",
               fontWeight: 900,
             }
           },
@@ -84,9 +85,6 @@ export default function chartYear() {
   
 }
 
-
-
-
   useEffect(()=>{
     const fetchData = async ()=>{
       try {
@@ -95,22 +93,18 @@ export default function chartYear() {
         const productionsData = producoesData.map( (data :any)=> data.count)
 
         setYears(yearsData)
-
         setSeries([{
           name: 'Nº de produções' ,
           data: productionsData
         }]);
-              
       } catch (error) {
         console.error('Erro ao carregar produções:', error);    
       }
     }
     fetchData();
-
   },[])
 
-
   return (
-    <Chart options={options} series={series} type="bar" height={384} width={750}/>
+    <Chart options={options} series={series} type="bar" height={400} width={850}/>
   )
 }

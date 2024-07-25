@@ -6,30 +6,32 @@ import { useApi } from '@/hooks/useApi';
 import { DataTableProducoes } from './Components/data_tableProducoes';
 import { columnsProducoes } from './Components/columnsProducoes'; 
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import { Pessoa } from '@/types/pessoa';
-import {Base64} from 'js-base64'
-
-
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { SelectPessoas } from '@/filtros/selectPessoa';
+import { SelectProducoes } from '@/filtros/selectProducoes';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 
 export default function Producoes() {
 
   const api = useApi()
 
 
-  const [producoes,setProducoes] = useState<any>([])//Armazena os dados para download
+  const [producoes,setProducoes] = useState<any[]>([])//Armazena os dados para download
   const [loading, setLoading] = useState(true);
-  const [pessoa, setPessoa] = useState<Pessoa[]>([]);
-  const [idpessoa, setIdPessoa] = useState<number>(0);
-
-  const handleSelectChangePessoa =  (id:number) => {
-    setIdPessoa(id);
-  }
+  const [filteredProducoes, setFilteredProducoes] = useState<any[]>([]);
+  const [selectedPessoas, setSelectedPessoas] = useState<number[]>([]);
+  const [selectedTipos, setSelectedTipos] = useState<string[]>([]);
+  const [startYear, setStartYear] = useState<number | null>(null);
+  const [endYear, setEndYear] = useState<number | null>(null);
 
 
   useEffect(()=>{
@@ -48,16 +50,10 @@ export default function Producoes() {
             hasMoreData = false;
           }
           currentPage++;
-        } 
-        
-        const pessoaData = await  api.loadAutores();
-        
+        }        
         setProducoes(allProducoes);
-        setPessoa(pessoaData);
-        
       } catch (error) {
-        console.error('Erro ao carregar produções:', error);
-        
+        console.error('Erro ao carregar produções:', error);        
       }
       finally {
         setLoading(false);
@@ -65,43 +61,33 @@ export default function Producoes() {
     }
     fetchAllData();
 
-  },[])
+  },[]);
 
+  const handleFiltroPessoasChange = (selected: number[]) => {
+    setSelectedPessoas(selected);
+  };
 
+  const handleFiltroProducoesChange = (selected: string[]) => {
+    setSelectedTipos(selected);
+  };
+  
+  useEffect(() => {
+    // Aplicar filtros sempre que as seleções mudarem
+    const applyFilters = () => {
+      const filtered = producoes.filter(producao => 
+        (selectedTipos.length === 0 || selectedTipos.includes(producao.tipo)) &&
+        (selectedPessoas.length === 0 || selectedPessoas.includes(producao.idpessoa))&&
+        (startYear === null || producao.ano >= startYear) &&
+        (endYear === null || producao.ano <= endYear)
+        
+      );
+      setFilteredProducoes(filtered);
+    };
 
-  const handleDownloadCSV = async ()=>{
-    
-    if(idpessoa){    
-      try {
-        const arquivoData = await  api.loadProducoesFileById(idpessoa); 
-        //Transformar o arquivo em csv 
-        convertBase64toCSV(arquivoData)
+    applyFilters();
+  }, [selectedTipos, selectedPessoas, startYear, endYear, producoes]);
+  console.log(filteredProducoes)
 
-      } catch (error) {
-        console.error('Erro ao carregar produções:', error); 
-      }
-    }
-  }
-
-  const convertBase64toCSV = (base64:string)=> {
-    try{
-    let binary_string = Base64.decode(base64) //Decodifica a string base64
-    console.log(binary_string)
-    const blob = new Blob([binary_string], { type: 'text/csv;charset=utf-8' }) //Criar um blob (arquivo grande com dados sem uma estrutura)
-    const url = URL.createObjectURL(blob) //Cria um URL para o Blob
-    const link = document.createElement('a'); // Cria um link
-    link.href = url
-    link.download = "producoes.csv"//Define o nome do arquivo 
-    document.body.appendChild(link);
-    link.click()
-    document.body.removeChild(link); // Remove o link do DOM
-    URL.revokeObjectURL(url); // Revoga a URL
-
-
-    }catch(error) {
-      console.error('Erro ao decodificar a string base64:', error);
-    }
-  }
 
   return (
     <div className='mx-auto flex flex-col gap-5 p-5 lg:container lg:py-5'>
@@ -111,33 +97,54 @@ export default function Producoes() {
        Produções
       </Badge>
       <div className=' flex flex-col items-start mt-1 gap-3'>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="outline" className=" w-48 h-10 mt-4">Aplique um filtro</Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px] max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Filtros</DialogTitle>
+              <DialogDescription>
+                Escolha os filtros
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-2 py-4">
+              <div className="flex items-center gap-2">
+                <SelectPessoas onChange={handleFiltroPessoasChange}/>
+              </div>
+              <div className="flex items-center gap-2">
+                <SelectProducoes onChange={handleFiltroProducoesChange}/>
+              </div>
+              <div className="flex items-center gap-2">
+              <div className='flex items-center space-x-2 gap-2'>
+                <Label>
+                    Ano Início:
+                        <Input className='mt-2' type="number" value={startYear ?? ''} onChange={(e) => setStartYear(Number(e.target.value))} />
+                </Label>
+                <Label>
+                        Ano Fim:
+                        <Input className='mt-2' type="number" value={endYear ?? ''} onChange={(e) => setEndYear(Number(e.target.value))} />
+                </Label>
+                </div>
+                  </div>
+                </div>
+                <DialogFooter>
+                <DialogClose asChild>
+                    <Button type="button" variant="secondary">
+                      Fechar
+                    </Button>
+                </DialogClose>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
 
-        <Select  onValueChange={(value:string)=>handleSelectChangePessoa(parseInt(value))}>
-          <SelectTrigger className="w-[250px]">
-            <SelectValue placeholder="Selecione o nome da pessoa" />
-          </SelectTrigger>
-          <SelectContent>
-            {
-              pessoa.map((pessoa)=>(
-                <SelectItem key={pessoa.idpessoa}  value={pessoa.idpessoa}  >{pessoa.nomecompleto}</SelectItem>
-              )
-
-              )
-            }
-          </SelectContent>
-        </Select>
-
-        <Button className=' w-fit ' onClick={handleDownloadCSV}>
-          Download CSV 
-        </Button>
 
       </div>
-
     <div className="">
           {loading ? (
             <div>Carregando...</div>
           ) : (
-            <DataTableProducoes columns={columnsProducoes} data={producoes} />
+            <DataTableProducoes columns={columnsProducoes} data={filteredProducoes} />
           )}
       </div>
     </div>

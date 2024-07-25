@@ -1,4 +1,4 @@
-import ChartDocente from "./components/chartDocente"
+import ChartTipo from "./components/chartTipo"
 import ChartYear from "./components/chartYear"
 
 
@@ -13,11 +13,13 @@ export default function Home() {
         <h1 className='text-lg font-semibold text-start pb-8'>Visão Geral do Programa de Pós Graduação</h1>
         <div className="flex flex-wrap justify-center gap-5">
             <div className="flex justify-center"> 
-                <ChartDocente/>
             </div> 
             <div className="flex justify-center"> 
                 <ChartYear/>
-            </div>            
+            </div>      
+            <div className="flex "> 
+                <ChartTipo/>
+            </div>        
         </div>         
     </div>
 

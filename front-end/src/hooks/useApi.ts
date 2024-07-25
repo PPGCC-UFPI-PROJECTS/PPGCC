@@ -51,6 +51,12 @@ export const useApi= () =>({
       const response = await api.get(`/api/producoes/${idPessoa}/arquivo`)
       return response.data;
 
+    },
+    loadProducoesByManyIds:async (idsPessoas:number[])=>{
+      const queryParams = idsPessoas.map(id => `pessoas=${id}`).join('&');
+      const response = await api.get(`/api/producoes/arquivo?${queryParams}`);
+      return response.data;
+
     }
     
    
