@@ -83,7 +83,7 @@ export const SelectPessoas: React.FC<FiltroPessoasProps> = ({ onChange }) => {
             </div>
          
             {pessoa.map((p) => (
-              <div key={p.idpessoa} className="flex items-center mb-1">
+              <div key={p.idpessoa} className="flex items-center mb-1  ">
                 <input
                   type="checkbox"
                   id={`pessoa-${p.idpessoa}`}

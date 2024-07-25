@@ -37,6 +37,7 @@ export default function chartYear() {
       palette: 'palette1', // Define uma paleta de cores específica
   
     },
+    
     plotOptions:{//Opções
       bar:{
         horizontal:false,
@@ -95,7 +96,8 @@ export default function chartYear() {
         setYears(yearsData)
         setSeries([{
           name: 'Nº de produções' ,
-          data: productionsData
+          data: productionsData,
+          color:"#FF6347"
         }]);
       } catch (error) {
         console.error('Erro ao carregar produções:', error);    
@@ -105,6 +107,8 @@ export default function chartYear() {
   },[])
 
   return (
-    <Chart options={options} series={series} type="bar" height={400} width={850}/>
+    <div>
+      <Chart options={options} series={series} type="bar" height={450} width={850}/>
+    </div>
   )
 }

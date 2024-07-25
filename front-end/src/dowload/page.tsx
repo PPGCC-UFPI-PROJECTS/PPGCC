@@ -16,6 +16,11 @@ import { useApi } from '@/hooks/useApi'
 import { useEffect, useState } from 'react'
 import { Producoes } from '@/types/producoes'
 import { Base64 } from 'js-base64';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
+
 
 export default function Filtro() {
   const api = useApi();
@@ -71,7 +76,7 @@ export default function Filtro() {
 
   const handleDownloadCSV = async ()=>{
     
-    if(selectedPessoas.length===1){    
+    if(selectedPessoas.length===1){     
       try {
         const arquivoData = await  api.loadProducoesFileById(selectedPessoas[0]); 
         console.log("String base 64",arquivoData)
@@ -79,9 +84,10 @@ export default function Filtro() {
         convertBase64toCSV(arquivoData)
 
       } catch (error) {
+       
         console.error('Erro ao carregar produções:', error); 
       }
-    }if(selectedPessoas.length>1){
+    }else if(selectedPessoas.length>1){
       try {
         
         const arquivoData = await  api.loadProducoesByManyIds(selectedPessoas); 
@@ -91,6 +97,13 @@ export default function Filtro() {
       } catch (error) {
         console.error('Erro ao carregar produções:', error); 
       }
+    }
+    else{
+      toast.error('Opps... Selecione uma pessoa.',{
+        position: "top-right",
+        theme: "dark",
+ })
+      
     }
   }
 
@@ -108,11 +121,14 @@ export default function Filtro() {
     document.body.removeChild(link); // Remove o link do DOM
     URL.revokeObjectURL(url); // Revoga a URL
 
-
+    toast.success('Operação realizada com sucesso')
     }catch(error) {
+    
       console.error('Erro ao decodificar a string base64:', error);
     }
   }
+
+
   
 
   return (
@@ -124,7 +140,7 @@ export default function Filtro() {
 
       <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" className=" w-48 h-10 mt-4">Escolha os autores</Button>
+        <Button variant="outline" className=" w-48 h-10 mt-4 border-2">Escolha os autores</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] max-h-[80vh] overflow-y-auto">
         <DialogHeader>
@@ -151,6 +167,8 @@ export default function Filtro() {
     <Button className=' w-fit ' onClick={handleDownloadCSV}>
           Download CSV 
     </Button>
+    <ToastContainer/>
+
     </div>
   )
 }

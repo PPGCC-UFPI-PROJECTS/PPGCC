@@ -52,6 +52,7 @@ export default function ChartTipo() {
       palette: 'palette1', // Define uma paleta de cores específica
   
     },
+   
     plotOptions:{//Opções
       bar:{
         horizontal:false,
@@ -97,7 +98,6 @@ export default function ChartTipo() {
       fontFamily: undefined,
     }
   },
-  colors: ['#1E90FF', '#32CD32', '#FF6347','#FF6377'], // Array de cores para cada coluna
 
   
 }
@@ -122,7 +122,7 @@ export default function ChartTipo() {
             setProducoes(allProducoes);
             //Extrair anos e tipos disponíveis e transforma em um array
             const anos = Array.from(new Set(allProducoes.map((item: any) => item.ano))).sort();
-            const tipos = Array.from(new Set(allProducoes.map((item: any) => item.tipo)));
+            const tipos = Array.from(new Set(allProducoes.map((item: any) => item.tipo.toUpperCase())));
             setAvailableYears(anos.map(Number));
             setAvailableTypes(tipos);
 
@@ -159,53 +159,52 @@ export default function ChartTipo() {
       const counts = tipos.map(tipo => filteredProducoes.filter(item => item.tipo === tipo).length);
 
       const series = [{
-        name: 'QuaNtidade',
-        data: counts
+        name: 'Quantidade',
+        data: counts,
+        color:"#32CD32"
+        
     }];
 
 
 
 
   return (
-    
-        <div className=' flex flex-col items-start mt-1 gap-3'>
+        <div className='flex flex-col items-start gap-3'>
         <Dialog>
           <DialogTrigger asChild>
-            <Button variant="outline" className=" w-48 h-10 mt-4">Aplique um filtro</Button>
+            <Button variant="outline" className=" w-40 h-8 shadow-md bg-input border-2 border-solid" >Aplique um filtro</Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px] max-h-[80vh] overflow-y-auto">
+          <DialogContent className="sm:max-w-[425px] max-h-[80vh] overflow-y-auto rounded-lg p-6">
             <DialogHeader>
-              <DialogTitle>Filtros</DialogTitle>
-              <DialogDescription>
+              <DialogTitle  className="text-lg font-semibold">Filtros</DialogTitle>
+              <DialogDescription className="text-sm text-gray-500">
                 Escolha os filtros
               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-2 py-4">
               <div className="flex items-center gap-2">
               <div className='flex items-center space-x-2 gap-2'>
-                <Label>
+                <Label className="flex flex-col gap-2">
                     Ano Início:
-                        <Input className='mt-2' type="number" value={startYear ?? ''} onChange={(e) => setStartYear(Number(e.target.value))} />
+                        <Input className='mt-1 p-2 border-2 bg-input rounded' type="number" value={startYear ?? ''} onChange={(e) => setStartYear(Number(e.target.value))} />
                 </Label>
-                <Label>
+                <Label className="flex flex-col gap-2">
                         Ano Fim:
-                        <Input className='mt-2' type="number" value={endYear ?? ''} onChange={(e) => setEndYear(Number(e.target.value))} />
+                        <Input className='mt-1 p-2 border-2 bg-input  rounded' type="number" value={endYear ?? ''} onChange={(e) => setEndYear(Number(e.target.value))} />
                 </Label>
                 </div>
                   </div>
                 </div>
-                <DialogFooter>
+                <DialogFooter className='flex justify-end gap-4' >
                 <DialogClose asChild>
-                    <Button type="button" variant="secondary">
+                    <Button type="button" variant="secondary" className="rounded-md shadow-md px-4 py-2">
                       Fechar
                     </Button>
                 </DialogClose>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
-        <Chart options={options} series={series} type="bar" height={400} width={450}/>
-
-   
+        <Chart options={options} series={series} type="bar" height={400} width={400}/>
     </div>
   )
 }

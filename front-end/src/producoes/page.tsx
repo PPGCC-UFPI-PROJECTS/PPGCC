@@ -90,21 +90,21 @@ export default function Producoes() {
 
 
   return (
-    <div className='mx-auto flex flex-col gap-5 p-5 lg:container lg:py-5'>
+    <div className='mx-auto flex flex-col gap-5 p-5 lg:container lg:py-5 '>
       <Badge 
       className="w-fit border-primary border-2 px-3 py-[0.375rem] uppercase gap-1 "variant="outline">
        <FileText size={20}/> 
        Produções
       </Badge>
-      <div className=' flex flex-col items-start mt-1 gap-3'>
+      <div className=' flex flex-col items-start mt-1 gap-4'>
         <Dialog>
           <DialogTrigger asChild>
-            <Button variant="outline" className=" w-48 h-10 mt-4">Aplique um filtro</Button>
+            <Button variant="outline" className=" w-48 h-10 mt-4 border-2 bg-input text-white rounded-md shadow-md">Aplique um filtro</Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px] max-h-[80vh] overflow-y-auto">
+          <DialogContent className="sm:max-w-[425px] max-h-[80vh] overflow-y-auto rounded-lg shadow-lg p-6 ">
             <DialogHeader>
-              <DialogTitle>Filtros</DialogTitle>
-              <DialogDescription>
+              <DialogTitle className="text-xl font-semibold">Filtros</DialogTitle>
+              <DialogDescription className="text-sm text-gray-500">
                 Escolha os filtros
               </DialogDescription>
             </DialogHeader>
@@ -115,22 +115,22 @@ export default function Producoes() {
               <div className="flex items-center gap-2">
                 <SelectProducoes onChange={handleFiltroProducoesChange}/>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-4">
               <div className='flex items-center space-x-2 gap-2'>
-                <Label>
+                <Label className='flex flex-col gap-2'>
                     Ano Início:
-                        <Input className='mt-2' type="number" value={startYear ?? ''} onChange={(e) => setStartYear(Number(e.target.value))} />
+                        <Input className='mt-1 p-2 border rounded-md bg-input text-white' type="number" value={startYear ?? ''} onChange={(e) => setStartYear(Number(e.target.value))} />
                 </Label>
-                <Label>
+                <Label className='flex flex-col gap-2'>
                         Ano Fim:
-                        <Input className='mt-2' type="number" value={endYear ?? ''} onChange={(e) => setEndYear(Number(e.target.value))} />
+                        <Input className='mt-1 p-2 border rounded-md bg-input text-white' type="number" value={endYear ?? ''} onChange={(e) => setEndYear(Number(e.target.value))} />
                 </Label>
                 </div>
                   </div>
                 </div>
-                <DialogFooter>
+                <DialogFooter className='flex justify-end gap-4'>
                 <DialogClose asChild>
-                    <Button type="button" variant="secondary">
+                    <Button className='  rounded-md shadow-md px-4 py-2' type="button" variant="secondary">
                       Fechar
                     </Button>
                 </DialogClose>
@@ -140,7 +140,7 @@ export default function Producoes() {
 
 
       </div>
-    <div className="">
+    <div className="rounded-lg shadow-lg w-full">
           {loading ? (
             <div>Carregando...</div>
           ) : (
